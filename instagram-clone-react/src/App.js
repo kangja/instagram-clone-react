@@ -34,7 +34,7 @@ function App() {
 
       {
         posts.map(({id, post}) => (
-           <Post username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
+          <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
         ))
       }
 
