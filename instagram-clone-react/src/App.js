@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { Button, Input } from "@material-ui/core";
 import ImageUpload from "./ImageUpload";
+import InstagramEmbed from "react-instagram-embed"
 
 function getModalStyle() {
   const top = 50;
@@ -65,7 +66,7 @@ function App() {
 
   useEffect(() => {
     // this is where the code runs
-    db.collection("posts").onSnapshot(snapshot => {
+    db.collection("posts").orderBy("timestamp", "desc").onSnapshot(snapshot => {
       setPosts(snapshot.docs.map(doc => ({
         id: doc.id,
         post: doc.data()
@@ -101,13 +102,6 @@ function App() {
 
   return (
     <div className="app">
-      {user?.displayName ? (
-        <ImageUpload username={user.displayName} />
-        
-
-      ) : (
-          <h3>Sorry, you need to login to upload.</h3>
-      )}
 
       <Modal
         open={open}
@@ -189,7 +183,6 @@ function App() {
           src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
           alt=""
         />
-        </div>
 
       {user ? (
         <Button onClick={() => auth.signOut()}>Logout</Button>
@@ -199,17 +192,38 @@ function App() {
           <Button onClick={() => setOpen(true)}>Sign Up</Button>
           </div>
         )}
-      
-       <h1>Hello my name is jason</h1>
+        </div>
 
-      {
-        posts.map(({id, post}) => (
-          <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
-        ))
-      }
+      <div className="app__posts"> 
+        {
+          posts.map(({id, post}) => (
+            <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
+          ))
+        }
+      </div>
+      <InstagramEmbed
+        url="https:/instagram.com/p/B_uf9dmAGPw/"
+        maxWidth={320}
+        hideCaption={false}
+        containerTagName="div"
+        protocol=""
+        injectScript
+        onLoding={() => { }}
+        onSuccess={() => { }}
+        onAfterRender={() => { }}
+        onfailure={() => { }}
+      />
+
+      {user?.displayName ? (
+              <ImageUpload username={user.displayName} />
+              
+        ) : (
+                <h3>Sorry, you need to login to upload.</h3>
+        )}
 
       </div>
       
+    
   );
 }
 
